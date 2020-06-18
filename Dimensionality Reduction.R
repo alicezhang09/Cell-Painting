@@ -37,34 +37,26 @@ normalize<-function(x){
   return(x)
 }
 
-#Parameter: 2 dataframes to compare
-#Returns shorter dataframe of two parameters
-
-get_shorter<-function(x,y){
-  if(nrow(x)>nrow(y)){
-    return(y)
-  }
-  else {
-    return(x)
-  }
-}
-
-#Parameter: 2 dataframes to compare
-#Returns longer dataframe of two parameters
-
-get_longer<-function(x,y){
-  if(nrow(x)>nrow(y)){
-    return(x)
-  }
-  else{
-    return(y)
-  }
-}
+#metadata function
+#Parameters: dataframe to reutrn, main dataframe (cells, nuclei, cytoplasm), columns corresponding to df's condition
+#Returns: dataframe with only rows of specified condition
 
 metadata<-function(df,main, x, y){
   df<-main%>% 
     filter(Metadata_PositionY==x|Metadata_PositionY==y)
   return(df)
+}
+
+#Shapiro- Wilks function
+#Parameters: dataframe, threshold
+#Returns: dataframe with only columns with W<threshold
+shapiro<-function(df, threshold){
+  df<- df[ ,- as.numeric(which(apply(df, 2, var) == 0))]
+  lshap <- lapply(df, shapiro.test)
+  lres <- sapply(lshap, `[`, c("statistic","p.value"))
+  lres<- as.data.frame(t(lres))
+  lres<-lres[lres[,"statistic"]<threshold,]
+  return (lres)
 }
 
 #function that adds rows with the column's average so the shorter dataframe matches the dimensions of the 
@@ -113,7 +105,6 @@ nuclei<- normalize(nuclei)
 #import image dataframes
 
 setwd("C:/Users/xinli/Desktop/Work/Spreadsheets/Image Data")
-
 images<-list.files(pattern="*Image.csv")
 images<-images%>% map_dfr(read.csv)
 
@@ -140,20 +131,19 @@ IWP_nuclei<-metadata(IWP_nuclei, nuclei, 6, 7)
 IWP_cytoplasm<-metadata(IWP_cytoplasm, cytoplasm, 6, 7)
 
 
-# to create a heatmap of a correlation matrix: 
-y<- average(get_longer(DMSO_cells, CHIR_cells), get_shorter(DMSO_cells, CHIR_cells))
-corr<-cor(DMSO_cells, y)
-corr<-corr[rowSums(is.na(corr))<ncol(corr)*0.5,colSums(is.na(corr))<nrow(corr)*0.5]
-p<- heatmap.2(corr, scale = "none", dendrogram='none', Rowv=TRUE, Colv=TRUE, 
-              col = colorpanel(1000, "red", "white", "red"), trace = "none", density.info = "none", 
-              xlab="DMSO", ylab="CHIR", main= "Correlation matrix heatmap", margins = c(12,12))
+#running Shapiro-Wilks test
+Shapiro_control_nuclei<-shapiro(control_nuclei,0.1)
 
+
+# to create a heatmap of a correlation matrix: 
 y<- average(Rock_cells, DMSO_cells)
 corr<-cor(Rock_cells, y)
 corr<-corr[rowSums(is.na(corr))<ncol(corr)*0.5,colSums(is.na(corr))<nrow(corr)*0.5]
 p<- heatmap.2(corr, scale = "none", dendrogram='none', Rowv=TRUE, Colv=TRUE, 
-              col = colorpanel(1000, "red", "white", "red"), trace = "none", density.info = "none", 
+              col = colorpanel(1000, "red", "white", "blue"), trace = "none", density.info = "none", 
               xlab="DMSO", ylab="IWP", main= "Correlation matrix heatmap", margins = c(12,12))
+
+#export correlation matrix
 write.csv(corr,"C:\\Users\\xinli\\Desktop\\RockvsDMSO.csv", row.names = TRUE)
 
 #separate dataframes based on features
@@ -175,27 +165,27 @@ cell_microenvironment_features<-cells[indx]
 corr<-cor(cell_shape_features)
 corr<-corr[rowSums(is.na(corr))<ncol(corr)*0.5,colSums(is.na(corr))<nrow(corr)*0.5]
 p<- heatmap.2(corr, scale = "none", dendrogram='none', Rowv=TRUE, Colv=TRUE, 
-              col = colorpanel(1000, "red", "white", "red"), trace = "none", density.info = "none", 
+              col = colorpanel(1000, "red", "white", "blue"), trace = "none", density.info = "none", 
               xlab="Cell shape features", ylab="Cell shape features", main= "Shape correlation heatmap", margins = c(12,12))
 
 corr<-cor(cell_intensity_features)
 corr<-corr[rowSums(is.na(corr))<ncol(corr)*0.5,colSums(is.na(corr))<nrow(corr)*0.5]
 p<- heatmap.2(corr, scale = "none", dendrogram='none', Rowv=TRUE, Colv=TRUE, 
-              col = colorpanel(1000, "red", "white", "red"), trace = "none", density.info = "none", 
+              col = colorpanel(1000, "red", "white", "blue"), trace = "none", density.info = "none", 
               xlab="Cell Intensity features", ylab="Cell Intensity features", main= "Intensity correlation heatmap", 
               margins = c(14,14))
 
 corr<-cor(cell_texture_features)
 corr<-corr[rowSums(is.na(corr))<ncol(corr)*0.5,colSums(is.na(corr))<nrow(corr)*0.5]
 p<- heatmap.2(corr, scale = "none", dendrogram='none', Rowv=TRUE, Colv=TRUE, 
-              col = colorpanel(1000, "red", "white", "red"), trace = "none", density.info = "none", 
+              col = colorpanel(1000, "red", "white", "blue"), trace = "none", density.info = "none", 
               xlab="Cell texture features", ylab="Cell texture features", main= "Texture correlation heatmap", 
               margins = c(12,12))
 
 corr<-cor(cell_microenvironment_features)
 corr<-corr[rowSums(is.na(corr))<ncol(corr)*0.5,colSums(is.na(corr))<nrow(corr)*0.5]
 p<- heatmap.2(corr, scale = "none", dendrogram='none', Rowv=TRUE, Colv=TRUE, 
-              col = colorpanel(1000, "red", "white", "red"), trace = "none", density.info = "none",
+              col = colorpanel(1000, "red", "white", "blue"), trace = "none", density.info = "none",
               main= "Microenvironment correlation heatmap", margins = c(12,12))
 
 
@@ -216,14 +206,14 @@ cell_ER_features<-cells[indx]
 corr<-cor(cell_mito_features)
 corr<-corr[rowSums(is.na(corr))<ncol(corr)*0.5,colSums(is.na(corr))<nrow(corr)*0.5]
 p<- heatmap.2(corr, scale = "none", dendrogram='none', Rowv=TRUE, Colv=TRUE, 
-              col = colorpanel(1000, "red", "white", "red"), trace = "none", density.info = "none", 
+              col = colorpanel(1000, "red", "white", "blue"), trace = "none", density.info = "none", 
               xlab="Mitochondria features", ylab="Mitochondria features", main= "Mitochondria correlation heatmap", 
               margins = c(15,15))
 
 corr<-cor(cell_ER_features)
 corr<-corr[rowSums(is.na(corr))<ncol(corr)*0.5,colSums(is.na(corr))<nrow(corr)*0.5]
 p<- heatmap.2(corr, scale = "none", dendrogram='none', Rowv=TRUE, Colv=TRUE, 
-              col = colorpanel(1000, "red", "white", "red"), trace = "none", density.info = "none", 
+              col = colorpanel(1000, "red", "white", "blue"), trace = "none", density.info = "none", 
               xlab="ER features", ylab="ER features", main= "ER correlation heatmap", 
               margins = c(15,15))
 
@@ -263,5 +253,5 @@ control_nuclei_matrix<-matrix(as.numeric(unlist(control_nuclei)),nrow=nrow(contr
 dists <- pdist(t(DMSO_cells), t(control_cells))
 dists<- as.matrix(dists)
 heatmap.2(dists, Colv=NA, Rowv=NA, col=cm.colors(256), scale="row", margins=c(3,3), xlab= "DMSO", ylab="Control",
-          main= "Feature-Feature Correlation Heatmap",xlab="DMSO", ylab="control")
-
+          main= "Feature-Feature Correlation Heatmap",xlab="DMSO", ylab="control”)
+          
