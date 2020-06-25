@@ -12,7 +12,6 @@ library(philentropy)
 library(scales)
 library(spade)
 library(devtools)
-devtools::install_github("nolanlab/Rclusterpp")
 
 #function to import dataframes and remove rows and columns with mostly empty cells
 #Parameter: list of file names
@@ -146,16 +145,14 @@ cells_median<- aggregate(.~ImageNumber, FUN=median, data=cells)
 cells_var<- aggregate(.~ImageNumber, FUN=var, data=cells)
 mean_var<-as.data.frame(sapply(cells_mean, var))
 
+#scale median dataframe to 0-10, create median profile heatmap
+
 ces <- data.frame(lapply(cells_median[,-1], function(x) (x-min(x))/(max(x) - min(x)) * 10))
 ces<-cbind(cells_median[,1], ces)
 rownames(ces) <- ces[,1]
 heatmap.2(as.matrix(ces), scale = "none", dendrogram='none', Rowv=FALSE, Colv=FALSE, 
           col = colorpanel(1000, "white", "blue"), trace = "none", density.info = "none", 
           xlab="median profile", ylab="condition", main= "Median Profiles", margins = c(12,5))
-
-cells_mean<- aggregate(.~ImageNumber, FUN=mean, data=cells)
-cells_median<- aggregate(.~Metadata_PositionY, FUN=median, data=cells)
-cells_var<- aggregate(.~ImageNumber, FUN=var, data=cells)
 
 #create histograms of distributions for a few features
 Cells_text<-cells$Texture_Correlation_Actin_10_00
@@ -247,7 +244,7 @@ p<- heatmap.2(corr, scale = "none", dendrogram='none', Rowv=TRUE, Colv=TRUE,
 
 
 
-#separate features based on wavelength
+#separate cell features based on wavelength
 indx<- grepl('mito',colnames(cells))
 cell_mito_features<-cells[indx]
 indx<-grepl('DNA', colnames(cells))
@@ -259,6 +256,7 @@ cell_nucleoli_features<- cells[indx]
 indx<- grepl('ER',colnames(cells))
 cell_ER_features<-cells[indx]
 
+#separate nuclei features based on wavelength
 indx<- grepl('mito',colnames(nuclei))
 nuc_mito_features<-nuclei[indx]
 indx<-grepl('DNA', colnames(nuclei))
@@ -269,9 +267,6 @@ indx<-grepl('Nucleoli', colnames(nuclei))
 nuc_nucleoli_features<- nuclei[indx]
 indx<- grepl('ER',colnames(nuclei))
 nuc_ER_features<-nuclei[indx]
-
-nuc<-as.data.frame(colnames(nuclei))
-write.csv(nuc,"C:\\Users\\xinli\\Desktop\\Features.csv", row.names = FALSE)
 
 #construct correlation matrices and heatmaps to compare different wavelengths
 corr<-cor(cell_mito_features)
@@ -329,6 +324,6 @@ write.csv(ex,"C:\\Users\\xinli\\Desktop\\Features.csv", row.names = FALSE)
 dists <- pdist(t(DMSO_cells), t(control_cells))
 dists<- as.matrix(dists)
 heatmap.2(dists, Colv=NA, Rowv=NA, col=cm.colors(256), scale="row", margins=c(3,3), xlab= "DMSO", ylab="Control",
-          main= "Feature-Feature Correlation Heatmap",xlab="DMSO", ylab="control”)
+          main= "Feature-Feature Correlation Heatmap")
           
           
