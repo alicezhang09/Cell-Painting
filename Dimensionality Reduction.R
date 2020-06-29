@@ -12,6 +12,7 @@ library(philentropy)
 library(scales)
 library(spade)
 library(devtools)
+library(Rclusterpp)
 
 #function to import dataframes and remove rows and columns with mostly empty cells
 #Parameter: list of file names
