@@ -155,6 +155,25 @@ heatmap.2(as.matrix(ces), scale = "none", dendrogram='none', Rowv=FALSE, Colv=FA
           col = colorpanel(1000, "white", "blue"), trace = "none", density.info = "none", 
           xlab="median profile", ylab="condition", main= "Median Profiles", margins = c(12,5))
 
+#find correlation across replicates
+control_cells_site10<-control_cells%>%
+  filter(ImageNumber==1)
+control_cells_site11<-control_cells%>%
+  filter(ImageNumber==2)
+y<- average(control_cells_site11, control_cells_site10)
+corr<-cor(control_cells_site11, y)
+diag<-as.data.frame(diag(corr))
+diag<-subset(diag, diag$`diag(corr)`>0.6)
+
+cor_control<-cor(control_cells)
+diag<-as.data.frame(diag(cor_control))
+diag<-subset(diag, diag$`diag(corr)`>0.6)
+
+y<- average(cells_site10, cells_site11)
+corr<-cor(cells_site10, y)
+diag<-as.data.frame(diag(corr))
+diag<-subset(diag, diag$`diag(corr)`>0.1)
+
 #create histograms of distributions for a few features
 Cells_text<-cells$Texture_Correlation_Actin_10_00
 hist(Cells_text, breaks=100)
@@ -320,6 +339,9 @@ control_nuclei_matrix<-matrix(as.numeric(unlist(control_nuclei)),nrow=nrow(contr
 ex<-as.data.frame(colnames(cells))
 write.csv(ex,"C:\\Users\\xinli\\Desktop\\Features.csv", row.names = FALSE)
 
+#calculate control feature-feature correlation matrix
+
+corr_cells<-cor(control_cells)
 
 
 dists <- pdist(t(DMSO_cells), t(control_cells))
