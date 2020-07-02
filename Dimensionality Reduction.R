@@ -10,9 +10,7 @@ library(ppcor)
 library(caret)
 library(philentropy)
 library(scales)
-library(spade)
 library(devtools)
-library(Rclusterpp)
 
 #function to import dataframes and remove rows and columns with mostly empty cells
 #Parameter: list of file names
@@ -32,7 +30,7 @@ import<-function(x){
 #about the metadata of the features, and are not features themselves
 
 normalize<-function(x){
-  x<- subset(x, select=-c(Metadata_PositionX,Metadata_Series, Metadata_Site))
+  x<- subset(x, select=-c(Metadata_PositionX,Metadata_Series))
   x <- x[ - as.numeric(which(apply(x, 2, var) == 0))]
   x<-x[,colSums(is.na(x))<nrow(x)]
   x<-x[rowSums(is.na(x))<ncol(x)*0.5,]
@@ -57,7 +55,7 @@ metadata<-function(df,main, x, y){
 #Parameters: dataframe, threshold
 #Returns: dataframe with only columns with W<threshold
 shapiro<-function(df, threshold){
-  df<- subset(df, select=-c(Metadata_PositionX,Metadata_Series, Metadata_Site))
+  df<- subset(df, select=-c(Metadata_Site))
   df<- df[ ,- as.numeric(which(apply(df, 2, var) == 0))]
   lshap <- lapply(df, shapiro.test)
   lres <- sapply(lshap, `[`, c("statistic","p.value"))
@@ -139,18 +137,26 @@ cells_site16<-cells%>%
 cells_site9<-cells%>%
   filter(ImageNumber==8)
 
+nuclei_site10<-nuclei%>%
+  filter(ImageNumber==1)
+nuclei_site11<-nuclei%>%
+  filter(ImageNumber==2)
+
+cytoplasm_site10<-cytoplasm%>%
+  filter(ImageNumber==1)
+cytoplasm_site11<-cytoplasm%>%
+  filter(ImageNumber==2)
 # compute mean, median, variance for each cell feature
 
-cells_mean<- aggregate(.~ImageNumber, FUN=mean, data=cells)
-cells_median<- aggregate(.~ImageNumber, FUN=median, data=cells)
-cells_var<- aggregate(.~ImageNumber, FUN=var, data=cells)
+cells_mean<- aggregate(.~Metadata_Site, FUN=mean, data=cells)
+cells_median<- aggregate(.~Metadata_Site, FUN=median, data=cells)
+cells_var<- aggregate(.~Metadata_Site, FUN=var, data=cells)
 mean_var<-as.data.frame(sapply(cells_mean, var))
 
 #scale median dataframe to 0-10, create median profile heatmap
-
-ces <- data.frame(lapply(cells_median[,-1], function(x) (x-min(x))/(max(x) - min(x)) * 10))
-ces<-cbind(cells_median[,1], ces)
-rownames(ces) <- ces[,1]
+ces <- data.frame(lapply(cells_median[,-7], function(x) (x-min(x))/(max(x) - min(x)) * 10))
+ces<-cbind(cells_median[,7], ces)
+rownames(ces) <- ces[,7]
 heatmap.2(as.matrix(ces), scale = "none", dendrogram='none', Rowv=FALSE, Colv=FALSE, 
           col = colorpanel(1000, "white", "blue"), trace = "none", density.info = "none", 
           xlab="median profile", ylab="condition", main= "Median Profiles", margins = c(12,5))
@@ -160,19 +166,55 @@ control_cells_site10<-control_cells%>%
   filter(ImageNumber==1)
 control_cells_site11<-control_cells%>%
   filter(ImageNumber==2)
-y<- average(control_cells_site11, control_cells_site10)
+y<- average(control_cells_site11,control_cells_site10)
 corr<-cor(control_cells_site11, y)
 diag<-as.data.frame(diag(corr))
 diag<-subset(diag, diag$`diag(corr)`>0.6)
 
-cor_control<-cor(control_cells)
-diag<-as.data.frame(diag(cor_control))
+DMSO_cells_site10<-DMSO_cells%>%
+  filter(ImageNumber==1)
+DMSO_cells_site11<-DMSO_cells%>%
+  filter(ImageNumber==2)
+y<- average(DMSO_cells_site11,DMSO_cells_site10)
+corr<-cor(DMSO_cells_site11, y)
+diag<-as.data.frame(diag(corr))
+diag<-subset(diag, diag$`diag(corr)`>0.23)
+
+control_nuclei_site10<-control_nuclei%>%
+  filter(ImageNumber==1)
+control_nuclei_site11<-control_nuclei%>%
+  filter(ImageNumber==2)
+y<- average(control_nuclei_site11, control_nuclei_site10)
+corr<-cor(control_nuclei_site11, y)
+diag<-as.data.frame(diag(corr))
 diag<-subset(diag, diag$`diag(corr)`>0.6)
 
-y<- average(cells_site10, cells_site11)
-corr<-cor(cells_site10, y)
+control_nuclei_site13<-control_nuclei%>%
+  filter(ImageNumber==4)
+control_nuclei_site14<-control_nuclei%>%
+  filter(ImageNumber==5)
+y<- average(control_nuclei_site13, control_nuclei_site14)
+corr<-cor(control_nuclei_site13, y)
 diag<-as.data.frame(diag(corr))
-diag<-subset(diag, diag$`diag(corr)`>0.1)
+diag<-subset(diag, diag$`diag(corr)`>0.6)
+
+DMSO_nuclei_site10<-DMSO_nuclei%>%
+  filter(ImageNumber==1)
+DMSO_nuclei_site11<-DMSO_nuclei%>%
+  filter(ImageNumber==2)
+y<- average(DMSO_nuclei_site11, DMSO_nuclei_site10)
+corr<-cor(DMSO_nuclei_site11, y)
+diag<-as.data.frame(diag(corr))
+diag<-subset(diag, diag$`diag(corr)`>0.24)
+
+control_cyto_site10<-control_cyto%>%
+  filter(ImageNumber==1)
+control_cyto_site11<-control_cyto%>%
+  filter(ImageNumber==2)
+y<- average(control_cyto_site11, control_cyto_site10)
+corr<-cor(control_cyto_site11, y)
+diag<-as.data.frame(diag(corr))
+diag<-subset(diag, diag$`diag(corr)`>0.6)
 
 #create histograms of distributions for a few features
 Cells_text<-cells$Texture_Correlation_Actin_10_00
@@ -193,15 +235,17 @@ heatmap.2(dists, Rowv=FALSE, Colv=FALSE, col = colorpanel(1000, "red", "white", 
 
 #create correlation matrix and heatmap of cell feature means
 corr<-cor(t(cells_mean))
-corr<-round(as.matrix(corr),6)
+corr<-round(as.matrix(corr),3)
 heatmap.2(corr, Rowv=FALSE, Colv=FALSE, col = colorpanel(1000, "red", "white", "blue"),  margins=c(3,3), cellnote=corr,         
           notecex=1.0, notecol="black",na.color=par("bg"), main= "Site Correlation Heatmap")
 
 
 #running Shapiro-Wilks test
-Shapiro_control_nuclei<-as.matrix(shapiro(control_nuclei,0.1))
-shapiro_control_cells<-as.matrix(shapiro(control_cells, 0.1))
-shapiro_control_cytoplasm<-as.matrix(shapiro(control_cyto, 0.1))
+Shapiro_control_nuclei<-(shapiro(control_nuclei_site10,0.1))
+
+#too many rows (>5000)
+shapiro_control_cells<-as.matrix(shapiro(control_cells, 0))
+
 
 shapiro_cells<-as.matrix(shapiro(cells,0.2))
 shapiro_nuclei<-as.matrix(shapiro(nuclei, 0.2))
