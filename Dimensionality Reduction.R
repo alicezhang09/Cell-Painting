@@ -34,9 +34,9 @@ normalize<-function(x){
   x <- x[ - as.numeric(which(apply(x, 2, var) == 0))]
   x<-x[,colSums(is.na(x))<nrow(x)]
   x<-x[rowSums(is.na(x))<ncol(x)*0.5,]
-  x1<-x[,c(1:5)]
-  x2<- as.data.frame(scale(x[,c(6:ncol(x))]))
-  x<-cbind(x1, x2)
+  #x1<-x[,c(1:5)]
+  #x2<- as.data.frame(scale(x[,c(6:ncol(x))]))
+  #x<-cbind(x1, x2)
   return(x)
 }
 
@@ -60,8 +60,20 @@ shapiro<-function(df, threshold){
   lshap <- lapply(df, shapiro.test)
   lres <- sapply(lshap, `[`, c("statistic","p.value"))
   lres<- as.data.frame(t(lres))
-  lres<-lres[lres[,"statistic"]<threshold,]
+  lres<-lres[lres[,"p.value"]<threshold,]
   return (lres)
+}
+
+#diagnol correlation function
+#parameters: longer dataframe, shorter dataframe, threshold for correlation, dataframes must have same columns
+#output: a list of all columns which have a correlation coeffecient > threshold
+
+diag2<-function(long, short, threshold){
+  y<- average(long, short)
+  corr<-cor(long, y)
+  diag<-as.data.frame(diag(corr))
+  diag<-subset(diag, diag$`diag(corr)`>threshold)
+  return(diag)
 }
 
 #function that adds rows with the column's average so the shorter dataframe matches the dimensions of the 
@@ -120,32 +132,23 @@ IWP_cytoplasm<-metadata(IWP_cytoplasm, cytoplasm, 6, 7)
 
 #separate dataframes based on site
 
-cells_site10<-cells%>%
-  filter(ImageNumber==1)
-cells_site11<-cells%>%
-  filter(ImageNumber==2)
-cells_site12<-cells%>%
-  filter(ImageNumber==3)
-cells_site13<-cells%>%
-  filter(ImageNumber==4)
-cells_site14<-cells%>%
-  filter(ImageNumber==5)
-cells_site15<-cells%>%
-  filter(ImageNumber==6)
-cells_site16<-cells%>%
-  filter(ImageNumber==7)
+cells_site8<-cells%>%
+  filter(Metadata_Site==8)
 cells_site9<-cells%>%
-  filter(ImageNumber==8)
+  filter(Metadata_Site==9)
+cells_site10<-cells%>%
+  filter(Metadata_Site==10)
+cells_site11<-cells%>%
+  filter(Metadata_Site==11)
+cells_site12<-cells%>%
+  filter(Metadata_Site==12)
+cells_site13<-cells%>%
+  filter(Metadata_Site==13)
+nuclei_site14<-nuclei%>%
+  filter(ImageNumber==14)
+nuclei_site15<-nuclei%>%
+  filter(ImageNumber==15)
 
-nuclei_site10<-nuclei%>%
-  filter(ImageNumber==1)
-nuclei_site11<-nuclei%>%
-  filter(ImageNumber==2)
-
-cytoplasm_site10<-cytoplasm%>%
-  filter(ImageNumber==1)
-cytoplasm_site11<-cytoplasm%>%
-  filter(ImageNumber==2)
 # compute mean, median, variance for each cell feature
 
 cells_mean<- aggregate(.~Metadata_Site, FUN=mean, data=cells)
@@ -156,65 +159,23 @@ mean_var<-as.data.frame(sapply(cells_mean, var))
 #scale median dataframe to 0-10, create median profile heatmap
 ces <- data.frame(lapply(cells_median[,-7], function(x) (x-min(x))/(max(x) - min(x)) * 10))
 ces<-cbind(cells_median[,7], ces)
-rownames(ces) <- ces[,7]
+rownames(ces) <- cells_median[,7]
 heatmap.2(as.matrix(ces), scale = "none", dendrogram='none', Rowv=FALSE, Colv=FALSE, 
           col = colorpanel(1000, "white", "blue"), trace = "none", density.info = "none", 
           xlab="median profile", ylab="condition", main= "Median Profiles", margins = c(12,5))
 
-#find correlation across replicates
+#find correlation across sites
 control_cells_site10<-control_cells%>%
-  filter(ImageNumber==1)
+  filter(Metadata_Site==10)
 control_cells_site11<-control_cells%>%
-  filter(ImageNumber==2)
-y<- average(control_cells_site11,control_cells_site10)
-corr<-cor(control_cells_site11, y)
-diag<-as.data.frame(diag(corr))
-diag<-subset(diag, diag$`diag(corr)`>0.6)
-
-DMSO_cells_site10<-DMSO_cells%>%
-  filter(ImageNumber==1)
-DMSO_cells_site11<-DMSO_cells%>%
-  filter(ImageNumber==2)
-y<- average(DMSO_cells_site11,DMSO_cells_site10)
-corr<-cor(DMSO_cells_site11, y)
-diag<-as.data.frame(diag(corr))
-diag<-subset(diag, diag$`diag(corr)`>0.23)
+  filter(Metadata_Site==11)
+control_s10_vs_s11<-diag2(control_cells_site11, control_cells_site10, 0.6)
 
 control_nuclei_site10<-control_nuclei%>%
-  filter(ImageNumber==1)
+  filter(Metadata_Site==10)
 control_nuclei_site11<-control_nuclei%>%
-  filter(ImageNumber==2)
-y<- average(control_nuclei_site11, control_nuclei_site10)
-corr<-cor(control_nuclei_site11, y)
-diag<-as.data.frame(diag(corr))
-diag<-subset(diag, diag$`diag(corr)`>0.6)
-
-control_nuclei_site13<-control_nuclei%>%
-  filter(ImageNumber==4)
-control_nuclei_site14<-control_nuclei%>%
-  filter(ImageNumber==5)
-y<- average(control_nuclei_site13, control_nuclei_site14)
-corr<-cor(control_nuclei_site13, y)
-diag<-as.data.frame(diag(corr))
-diag<-subset(diag, diag$`diag(corr)`>0.6)
-
-DMSO_nuclei_site10<-DMSO_nuclei%>%
-  filter(ImageNumber==1)
-DMSO_nuclei_site11<-DMSO_nuclei%>%
-  filter(ImageNumber==2)
-y<- average(DMSO_nuclei_site11, DMSO_nuclei_site10)
-corr<-cor(DMSO_nuclei_site11, y)
-diag<-as.data.frame(diag(corr))
-diag<-subset(diag, diag$`diag(corr)`>0.24)
-
-control_cyto_site10<-control_cyto%>%
-  filter(ImageNumber==1)
-control_cyto_site11<-control_cyto%>%
-  filter(ImageNumber==2)
-y<- average(control_cyto_site11, control_cyto_site10)
-corr<-cor(control_cyto_site11, y)
-diag<-as.data.frame(diag(corr))
-diag<-subset(diag, diag$`diag(corr)`>0.6)
+  filter(Metadata_Site==11)
+controlnuc_s10_vs_s11<-diag2(control_nuclei_site11, control_nuclei_site10, 0.6)
 
 #create histograms of distributions for a few features
 Cells_text<-cells$Texture_Correlation_Actin_10_00
@@ -241,15 +202,18 @@ heatmap.2(corr, Rowv=FALSE, Colv=FALSE, col = colorpanel(1000, "red", "white", "
 
 
 #running Shapiro-Wilks test
-Shapiro_control_nuclei<-(shapiro(control_nuclei_site10,0.1))
+Shapiro_control_nuclei<-(shapiro(control_nuclei_site10, 0.001))
+Shapiro_control_nuclei2<-(shapiro(control_nuclei_site11, 0.05))
+shapiro_s10<-shapiro(cells_site11, 0.2)
 
+Cells_text2<-control_nuclei_site10$Correlation_Correlation_Actin_DNA
+hist(Cells_text2, breaks=100)
 #too many rows (>5000)
 shapiro_control_cells<-as.matrix(shapiro(control_cells, 0))
 
-
 shapiro_cells<-as.matrix(shapiro(cells,0.2))
 shapiro_nuclei<-as.matrix(shapiro(nuclei, 0.2))
-shapiro_cytoplasm<- shapiro(cytoplasm, 0.2)
+shapiro_cytoplasm<- shapiro(cytoplasm, 0.9)
 
 write.csv(shapiro_control_cytoplasm,"C:\\Users\\xinli\\Desktop\\shapiro_control_cytoplasm.csv", row.names = TRUE)
 
@@ -351,6 +315,8 @@ p<- heatmap.2(corr, scale = "none", dendrogram='none', Rowv=TRUE, Colv=TRUE,
 
 Count<-images[,c(1:9,15:17,126)]
 Count<- aggregate(.~Metadata_PositionY, FUN=mean, data=Count)
+Count[,"Nuc_Cyto"] <- Count[,4]/Count[,3]
+
 Count<-Count%>% replace(Count=="8", "CHIR")
 Count<-Count%>% replace(Count=="9", "Rock Inhibitor")
 Count<-Count%>% replace(Count=="10", "DMSO")
@@ -363,8 +329,27 @@ ggplot(Count, aes(x=Metadata_PositionY, y=AreaOccupied_AreaOccupied_Cells)) + ge
   labs(x="Experimental Condition", y="Area Occupied by Cells", main="Area Occupied vs Experimental Condition")
 ggplot(Count, aes(x=Metadata_PositionY, y=AreaOccupied_AreaOccupied_Nuclei)) + geom_bar(stat="identity") + 
   labs(x="Experimental Condition", y="Area Occupied by Nuclei")
+ggplot(Count, aes(x=Metadata_PositionY, y=AreaOccupied_AreaOccupied_Cytoplasm)) + geom_bar(stat="identity") + 
+  labs(x="Experimental Condition", y="Area Occupied by Cytoplasm")
 ggplot(Count, aes(x=Metadata_PositionY, y=Count_Cells)) + geom_bar(stat="identity") + 
   labs(x="Experimental Condition", y="Cell count")
+ggplot(Count, aes(x=Metadata_PositionY, y=Nuc_Cyto)) + geom_bar(stat="identity") + 
+  labs(x="Experimental Condition", y="Nucleus to Cytoplasm ratio")
+
+CHIR_images<-images%>%
+  filter(Metadata_PositionY==8)
+DMSO_images<-images%>%
+  filter(Metadata_PositionY==10)
+control_images<-images%>%
+  filter(Metadata_PositionY==11)
+
+images_area <-CHIR_images$AreaOccupied_AreaOccupied_Nuclei
+hist(images_area, breaks=100)
+
+control_area<-control_images$AreaOccupied_AreaOccupied_Nuclei
+hist(control_area, breaks=6)
+nuclei_intensity<-nuclei$Intensity_MinIntensity_Actin
+hist(nuclei_intensity, breaks=200)
 
 #export dataframe 
 write.csv(corr,"C:\\Users\\xinli\\Desktop\\MyData.csv", row.names = FALSE)
