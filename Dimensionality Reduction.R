@@ -64,6 +64,27 @@ shapiro<-function(df, threshold){
   return (lres)
 }
 
+#Shapiro- Wilks function
+#Parameters: dataframe, threshold
+#Returns: dataframe with only columns with W>threshold
+shapiro2<-function(df, threshold){
+  df<- subset(df, select=-c(Metadata_Site))
+  df<- df[ ,- as.numeric(which(apply(df, 2, var) == 0))]
+  lshap <- lapply(df, shapiro.test)
+  lres <- sapply(lshap, `[`, c("statistic","p.value"))
+  lres<- as.data.frame(t(lres))
+  lres<-lres[lres[,"p.value"]>threshold,]
+  return (lres)
+}
+
+ks2<-function(df){
+  df<- subset(df, select=-c(Metadata_Site))
+  df<- df[ ,- as.numeric(which(apply(df, 2, var) == 0))]
+  lshap <- lapply(df, function(t,d1){ks.test(df,"pnorm")})
+  lres <- sapply(lshap, `[`, c("statistic","p.value"))
+  return (lres)
+}
+
 #diagnol correlation function
 #parameters: longer dataframe, shorter dataframe, threshold for correlation, dataframes must have same columns
 #output: a list of all columns which have a correlation coeffecient > threshold
@@ -148,6 +169,10 @@ nuclei_site14<-nuclei%>%
   filter(ImageNumber==14)
 nuclei_site15<-nuclei%>%
   filter(ImageNumber==15)
+nuclei_site10<-nuclei%>%
+  filter(Metadata_Site==10)
+nuclei_site11<-nuclei%>%
+  filter(Metadata_Site==11)
 
 # compute mean, median, variance for each cell feature
 
@@ -156,7 +181,23 @@ cells_median<- aggregate(.~Metadata_Site, FUN=median, data=cells)
 cells_var<- aggregate(.~Metadata_Site, FUN=var, data=cells)
 mean_var<-as.data.frame(sapply(cells_mean, var))
 
-#scale median dataframe to 0-10, create median profile heatmap
+cells_mean2<- aggregate(.~Metadata_PositionY, FUN=mean, data=cells)
+cells_median2<- aggregate(.~Metadata_PositionY, FUN=median, data=cells)
+cells_var2<- aggregate(.~Metadata_PositionY, FUN=var, data=cells)
+mean_var3<-as.data.frame(sapply(cells_mean2, var))
+
+#compute features with averages that don't vary much across sites 
+mean_var2<- mean_var %>%
+  rownames_to_column('rownames') %>%
+  filter(`sapply(cells_mean, var)`>1000) %>%
+  column_to_rownames('rownames')
+
+mean_var5<- mean_var3 %>%
+  rownames_to_column('rownames') %>%
+  filter(`sapply(cells_mean2, var)`>1000) %>%
+  column_to_rownames('rownames')
+
+ #scale median dataframe to 0-10, create median profile heatmap
 ces <- data.frame(lapply(cells_median[,-7], function(x) (x-min(x))/(max(x) - min(x)) * 10))
 ces<-cbind(cells_median[,7], ces)
 rownames(ces) <- cells_median[,7]
@@ -177,6 +218,12 @@ control_nuclei_site11<-control_nuclei%>%
   filter(Metadata_Site==11)
 controlnuc_s10_vs_s11<-diag2(control_nuclei_site11, control_nuclei_site10, 0.6)
 
+#find correlation across conditions
+DMSO_vs_control<-diag2(control_cells, DMSO_cells, 0.1)
+DMSO_cells_s10<-DMSO_cells%>%
+  filter(Metadata_Site==10)
+DMSOs10vs_control<-diag2( control_cells_site10, DMSO_cells_s10, 0.1)
+
 #create histograms of distributions for a few features
 Cells_text<-cells$Texture_Correlation_Actin_10_00
 hist(Cells_text, breaks=100)
@@ -186,6 +233,9 @@ nuclei_neighbors<-nuclei$Neighbors_NumberOfNeighbors_5
 hist(nuclei_neighbors, breaks=10)
 nuclei_intensity<-nuclei$Intensity_MinIntensity_Actin
 hist(nuclei_intensity, breaks=200)
+
+cells_text<- control_cells$AreaShape_FormFactor
+hist(cells_text, breaks=100)
 
 #create distance matrix and heatmap of cell feature means
 dists <- dist(cells_mean)
@@ -202,20 +252,31 @@ heatmap.2(corr, Rowv=FALSE, Colv=FALSE, col = colorpanel(1000, "red", "white", "
 
 
 #running Shapiro-Wilks test
-Shapiro_control_nuclei<-(shapiro(control_nuclei_site10, 0.001))
 Shapiro_control_nuclei2<-(shapiro(control_nuclei_site11, 0.05))
-shapiro_s10<-shapiro(cells_site11, 0.2)
+Shapiro_control_nuclei3<-(shapiro2(control_nuclei_site11, 0.05))
+shaprio_s11_nuclei<-shapiro2(nuclei_site11,0.005)
 
-Cells_text2<-control_nuclei_site10$Correlation_Correlation_Actin_DNA
-hist(Cells_text2, breaks=100)
-#too many rows (>5000)
-shapiro_control_cells<-as.matrix(shapiro(control_cells, 0))
+shap_control<-shapiro2(control_cyto[0:5000,],0.0005)
+shaprio_s10_nuclei<-shapiro2(nuclei_site10,0.05)
 
-shapiro_cells<-as.matrix(shapiro(cells,0.2))
-shapiro_nuclei<-as.matrix(shapiro(nuclei, 0.2))
-shapiro_cytoplasm<- shapiro(cytoplasm, 0.9)
+shapiro_control<-shapiro2(control_cells[0:5000,], 0.0000000005)
 
 write.csv(shapiro_control_cytoplasm,"C:\\Users\\xinli\\Desktop\\shapiro_control_cytoplasm.csv", row.names = TRUE)
+
+#running KS test
+h<- ks.test(control_cells$AreaShape_FormFactor, "dnorm")
+
+b<-as.data.frame(t(colnames(control_cells)))
+for(i in names(control_cells)){
+  b[2,i]<-ks.test(control_cells[,i])
+}
+
+h<- lapply(control_cells, function(i){ # Evaluate E at each level of each column
+  x <- factor(control_cells[,i])
+  ks.test(x, "dnorm")
+}) 
+
+h<-colKS(control_cells, interpret=TRUE)
 
 # to create a heatmap of a correlation matrix: 
 y<- average(Rock_cells, DMSO_cells)
@@ -371,6 +432,7 @@ write.csv(ex,"C:\\Users\\xinli\\Desktop\\Features.csv", row.names = FALSE)
 #calculate control feature-feature correlation matrix
 
 corr_cells<-cor(control_cells)
+corr_cells<-corr_cells[-2,-2]
 
 
 dists <- pdist(t(DMSO_cells), t(control_cells))
