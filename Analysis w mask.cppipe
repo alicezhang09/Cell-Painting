@@ -173,7 +173,7 @@ MaskImage:[module_num:10|svn_version:\'Unknown\'|variable_revision_number:3|show
 
 MaskImage:[module_num:11|svn_version:\'Unknown\'|variable_revision_number:3|show_window:True|notes:\x5B\x5D|batch_state:array(\x5B\x5D, dtype=uint8)|enabled:True|wants_pause:False]
     Select the input image:\xff\xfeA\x00c\x00t\x00i\x00n\x00
-    Name the output image:\xff\xfea\x00c\x00t\x00i\x00n\x00
+    Name the output image:\xff\xfea\x00c\x00t\x00i\x00n\x002\x00
     Use objects or an image as a mask?:\xff\xfeI\x00m\x00a\x00g\x00e\x00
     Select object for mask:\xff\xfeN\x00o\x00n\x00e\x00
     Select image for mask:\xff\xfeF\x00i\x00l\x00t\x00e\x00r\x00e\x00d\x00I\x00m\x00a\x00g\x00e\x00
@@ -181,7 +181,7 @@ MaskImage:[module_num:11|svn_version:\'Unknown\'|variable_revision_number:3|show
 
 MaskImage:[module_num:12|svn_version:\'Unknown\'|variable_revision_number:3|show_window:True|notes:\x5B\x5D|batch_state:array(\x5B\x5D, dtype=uint8)|enabled:True|wants_pause:False]
     Select the input image:\xff\xfeE\x00R\x00
-    Name the output image:\xff\xfee\x00r\x00
+    Name the output image:\xff\xfee\x00r\x002\x00
     Use objects or an image as a mask?:\xff\xfeI\x00m\x00a\x00g\x00e\x00
     Select object for mask:\xff\xfeN\x00o\x00n\x00e\x00
     Select image for mask:\xff\xfeF\x00i\x00l\x00t\x00e\x00r\x00e\x00d\x00I\x00m\x00a\x00g\x00e\x00
@@ -189,7 +189,7 @@ MaskImage:[module_num:12|svn_version:\'Unknown\'|variable_revision_number:3|show
 
 MaskImage:[module_num:13|svn_version:\'Unknown\'|variable_revision_number:3|show_window:True|notes:\x5B\x5D|batch_state:array(\x5B\x5D, dtype=uint8)|enabled:True|wants_pause:False]
     Select the input image:\xff\xfeN\x00u\x00c\x00l\x00e\x00o\x00l\x00i\x00
-    Name the output image:\xff\xfen\x00u\x00c\x00l\x00e\x00o\x00l\x00i\x00
+    Name the output image:\xff\xfen\x00u\x00c\x00l\x00e\x00o\x00l\x00i\x002\x00
     Use objects or an image as a mask?:\xff\xfeI\x00m\x00a\x00g\x00e\x00
     Select object for mask:\xff\xfeN\x00o\x00n\x00e\x00
     Select image for mask:\xff\xfeF\x00i\x00l\x00t\x00e\x00r\x00e\x00d\x00I\x00m\x00a\x00g\x00e\x00
@@ -197,7 +197,7 @@ MaskImage:[module_num:13|svn_version:\'Unknown\'|variable_revision_number:3|show
 
 MaskImage:[module_num:14|svn_version:\'Unknown\'|variable_revision_number:3|show_window:True|notes:\x5B\x5D|batch_state:array(\x5B\x5D, dtype=uint8)|enabled:True|wants_pause:False]
     Select the input image:\xff\xfem\x00i\x00t\x00o\x00
-    Name the output image:\xff\xfem\x00i\x00t\x00o\x00c\x00h\x00o\x00n\x00d\x00r\x00i\x00a\x00
+    Name the output image:\xff\xfem\x00i\x00t\x00o\x00c\x00h\x00o\x00n\x00d\x00r\x00i\x00a\x002\x00
     Use objects or an image as a mask?:\xff\xfeI\x00m\x00a\x00g\x00e\x00
     Select object for mask:\xff\xfeN\x00o\x00n\x00e\x00
     Select image for mask:\xff\xfeF\x00i\x00l\x00t\x00e\x00r\x00e\x00d\x00I\x00m\x00a\x00g\x00e\x00
@@ -219,7 +219,7 @@ IdentifyPrimaryObjects:[module_num:15|svn_version:\'Unknown\'|variable_revision_
     Automatically calculate minimum allowed distance between local maxima?:\xff\xfeY\x00e\x00s\x00
     Handling of objects if excessive number of objects identified:\xff\xfeC\x00o\x00n\x00t\x00i\x00n\x00u\x00e\x00
     Maximum number of objects:\xff\xfe5\x000\x000\x00
-    Use advanced settings?:\xff\xfeN\x00o\x00
+    Use advanced settings?:\xff\xfeY\x00e\x00s\x00
     Threshold setting version:\xff\xfe1\x000\x00
     Threshold strategy:\xff\xfeG\x00l\x00o\x00b\x00a\x00l\x00
     Thresholding method:\xff\xfeM\x00i\x00n\x00i\x00m\x00u\x00m\x00 \x00c\x00r\x00o\x00s\x00s\x00 \x00e\x00n\x00t\x00r\x00o\x00p\x00y\x00
@@ -242,7 +242,7 @@ IdentifySecondaryObjects:[module_num:16|svn_version:\'Unknown\'|variable_revisio
     Select the input objects:\xff\xfeN\x00u\x00c\x00l\x00e\x00i\x00
     Name the objects to be identified:\xff\xfeC\x00e\x00l\x00l\x00s\x00
     Select the method to identify the secondary objects:\xff\xfeP\x00r\x00o\x00p\x00a\x00g\x00a\x00t\x00i\x00o\x00n\x00
-    Select the input image:\xff\xfea\x00c\x00t\x00i\x00n\x00
+    Select the input image:\xff\xfea\x00c\x00t\x00i\x00n\x002\x00
     Number of pixels by which to expand the primary objects:\xff\xfe1\x000\x00
     Regularization factor:\xff\xfe0\x00.\x000\x005\x00
     Discard secondary objects touching the border of the image?:\xff\xfeN\x00o\x00
@@ -294,11 +294,11 @@ MeasureObjectSizeShape:[module_num:19|svn_version:\'Unknown\'|variable_revision_
 MeasureColocalization:[module_num:20|svn_version:\'Unknown\'|variable_revision_number:3|show_window:True|notes:\x5B\x5D|batch_state:array(\x5B\x5D, dtype=uint8)|enabled:True|wants_pause:False]
     Hidden:\xff\xfe5\x00
     Hidden:\xff\xfe3\x00
-    Select an image to measure:\xff\xfea\x00c\x00t\x00i\x00n\x00
+    Select an image to measure:\xff\xfea\x00c\x00t\x00i\x00n\x002\x00
     Select an image to measure:\xff\xfed\x00n\x00a\x002\x00
-    Select an image to measure:\xff\xfee\x00r\x00
-    Select an image to measure:\xff\xfen\x00u\x00c\x00l\x00e\x00o\x00l\x00i\x00
-    Select an image to measure:\xff\xfem\x00i\x00t\x00o\x00
+    Select an image to measure:\xff\xfee\x00r\x002\x00
+    Select an image to measure:\xff\xfen\x00u\x00c\x00l\x00e\x00o\x00l\x00i\x002\x00
+    Select an image to measure:\xff\xfem\x00i\x00t\x00o\x00c\x00h\x00o\x00n\x00d\x00r\x00i\x00a\x002\x00
     Set threshold as percentage of maximum intensity for the images:\xff\xfe1\x005\x00.\x000\x00
     Select where to measure correlation:\xff\xfeW\x00i\x00t\x00h\x00i\x00n\x00 \x00o\x00b\x00j\x00e\x00c\x00t\x00s\x00
     Select an object to measure:\xff\xfeN\x00u\x00c\x00l\x00e\x00i\x00
@@ -315,11 +315,11 @@ MeasureTexture:[module_num:21|svn_version:\'Unknown\'|variable_revision_number:5
     Hidden:\xff\xfe5\x00
     Hidden:\xff\xfe3\x00
     Hidden:\xff\xfe3\x00
-    Select an image to measure:\xff\xfea\x00c\x00t\x00i\x00n\x00
+    Select an image to measure:\xff\xfea\x00c\x00t\x00i\x00n\x002\x00
     Select an image to measure:\xff\xfed\x00n\x00a\x002\x00
-    Select an image to measure:\xff\xfee\x00r\x00
-    Select an image to measure:\xff\xfen\x00u\x00c\x00l\x00e\x00o\x00l\x00i\x00
-    Select an image to measure:\xff\xfem\x00i\x00t\x00o\x00c\x00h\x00o\x00n\x00d\x00r\x00i\x00a\x00
+    Select an image to measure:\xff\xfee\x00r\x002\x00
+    Select an image to measure:\xff\xfen\x00u\x00c\x00l\x00e\x00o\x00l\x00i\x002\x00
+    Select an image to measure:\xff\xfem\x00i\x00t\x00o\x00c\x00h\x00o\x00n\x00d\x00r\x00i\x00a\x002\x00
     Select objects to measure:\xff\xfeC\x00e\x00l\x00l\x00s\x00
     Select objects to measure:\xff\xfeC\x00y\x00t\x00o\x00p\x00l\x00a\x00s\x00m\x00
     Select objects to measure:\xff\xfeN\x00u\x00c\x00l\x00e\x00i\x00
@@ -331,7 +331,7 @@ MeasureTexture:[module_num:21|svn_version:\'Unknown\'|variable_revision_number:5
 MeasureGranularity:[module_num:22|svn_version:\'Unknown\'|variable_revision_number:3|show_window:True|notes:\x5B\x5D|batch_state:array(\x5B\x5D, dtype=uint8)|enabled:True|wants_pause:False]
     Image count:\xff\xfe5\x00
     Object count:\xff\xfe3\x00
-    Select an image to measure:\xff\xfea\x00c\x00t\x00i\x00n\x00
+    Select an image to measure:\xff\xfea\x00c\x00t\x00i\x00n\x002\x00
     Subsampling factor for granularity measurements:\xff\xfe0\x00.\x002\x005\x00
     Subsampling factor for background reduction:\xff\xfe0\x00.\x002\x005\x00
     Radius of structuring element:\xff\xfe1\x000\x00
@@ -340,7 +340,7 @@ MeasureGranularity:[module_num:22|svn_version:\'Unknown\'|variable_revision_numb
     Select objects to measure:\xff\xfeN\x00u\x00c\x00l\x00e\x00i\x00
     Select objects to measure:\xff\xfeC\x00y\x00t\x00o\x00p\x00l\x00a\x00s\x00m\x00
     Object count:\xff\xfe3\x00
-    Select an image to measure:\xff\xfee\x00r\x00
+    Select an image to measure:\xff\xfee\x00r\x002\x00
     Subsampling factor for granularity measurements:\xff\xfe0\x00.\x002\x005\x00
     Subsampling factor for background reduction:\xff\xfe0\x00.\x002\x005\x00
     Radius of structuring element:\xff\xfe1\x000\x00
@@ -349,7 +349,7 @@ MeasureGranularity:[module_num:22|svn_version:\'Unknown\'|variable_revision_numb
     Select objects to measure:\xff\xfeN\x00u\x00c\x00l\x00e\x00i\x00
     Select objects to measure:\xff\xfeC\x00y\x00t\x00o\x00p\x00l\x00a\x00s\x00m\x00
     Object count:\xff\xfe3\x00
-    Select an image to measure:\xff\xfen\x00u\x00c\x00l\x00e\x00o\x00l\x00i\x00
+    Select an image to measure:\xff\xfen\x00u\x00c\x00l\x00e\x00o\x00l\x00i\x002\x00
     Subsampling factor for granularity measurements:\xff\xfe0\x00.\x002\x005\x00
     Subsampling factor for background reduction:\xff\xfe0\x00.\x002\x005\x00
     Radius of structuring element:\xff\xfe1\x000\x00
@@ -358,7 +358,7 @@ MeasureGranularity:[module_num:22|svn_version:\'Unknown\'|variable_revision_numb
     Select objects to measure:\xff\xfeC\x00y\x00t\x00o\x00p\x00l\x00a\x00s\x00m\x00
     Select objects to measure:\xff\xfeN\x00u\x00c\x00l\x00e\x00i\x00
     Object count:\xff\xfe3\x00
-    Select an image to measure:\xff\xfem\x00i\x00t\x00o\x00c\x00h\x00o\x00n\x00d\x00r\x00i\x00a\x00
+    Select an image to measure:\xff\xfem\x00i\x00t\x00o\x00c\x00h\x00o\x00n\x00d\x00r\x00i\x00a\x002\x00
     Subsampling factor for granularity measurements:\xff\xfe0\x00.\x002\x005\x00
     Subsampling factor for background reduction:\xff\xfe0\x00.\x002\x005\x00
     Radius of structuring element:\xff\xfe1\x000\x00
@@ -376,11 +376,11 @@ MeasureGranularity:[module_num:22|svn_version:\'Unknown\'|variable_revision_numb
 
 MeasureObjectIntensity:[module_num:23|svn_version:\'Unknown\'|variable_revision_number:3|show_window:True|notes:\x5B\x5D|batch_state:array(\x5B\x5D, dtype=uint8)|enabled:True|wants_pause:False]
     Hidden:\xff\xfe5\x00
-    Select an image to measure:\xff\xfea\x00c\x00t\x00i\x00n\x00
+    Select an image to measure:\xff\xfea\x00c\x00t\x00i\x00n\x002\x00
     Select an image to measure:\xff\xfed\x00n\x00a\x002\x00
-    Select an image to measure:\xff\xfee\x00r\x00
-    Select an image to measure:\xff\xfen\x00u\x00c\x00l\x00e\x00o\x00l\x00i\x00
-    Select an image to measure:\xff\xfem\x00i\x00t\x00o\x00c\x00h\x00o\x00n\x00d\x00r\x00i\x00a\x00
+    Select an image to measure:\xff\xfee\x00r\x002\x00
+    Select an image to measure:\xff\xfen\x00u\x00c\x00l\x00e\x00o\x00l\x00i\x002\x00
+    Select an image to measure:\xff\xfem\x00i\x00t\x00o\x00c\x00h\x00o\x00n\x00d\x00r\x00i\x00a\x002\x00
     Select objects to measure:\xff\xfeC\x00e\x00l\x00l\x00s\x00
     Select objects to measure:\xff\xfeC\x00y\x00t\x00o\x00p\x00l\x00a\x00s\x00m\x00
     Select objects to measure:\xff\xfeN\x00u\x00c\x00l\x00e\x00i\x00
@@ -392,11 +392,11 @@ MeasureObjectIntensityDistribution:[module_num:24|svn_version:\'Unknown\'|variab
     Hidden:\xff\xfe0\x00
     Calculate intensity Zernikes?:\xff\xfeM\x00a\x00g\x00n\x00i\x00t\x00u\x00d\x00e\x00s\x00 \x00a\x00n\x00d\x00 \x00p\x00h\x00a\x00s\x00e\x00
     Maximum zernike moment:\xff\xfe9\x00
-    Select an image to measure:\xff\xfea\x00c\x00t\x00i\x00n\x00
+    Select an image to measure:\xff\xfea\x00c\x00t\x00i\x00n\x002\x00
     Select an image to measure:\xff\xfed\x00n\x00a\x002\x00
-    Select an image to measure:\xff\xfee\x00r\x00
-    Select an image to measure:\xff\xfen\x00u\x00c\x00l\x00e\x00o\x00l\x00i\x00
-    Select an image to measure:\xff\xfem\x00i\x00t\x00o\x00c\x00h\x00o\x00n\x00d\x00r\x00i\x00a\x00
+    Select an image to measure:\xff\xfee\x00r\x002\x00
+    Select an image to measure:\xff\xfen\x00u\x00c\x00l\x00e\x00o\x00l\x00i\x002\x00
+    Select an image to measure:\xff\xfem\x00i\x00t\x00o\x00c\x00h\x00o\x00n\x00d\x00r\x00i\x00a\x002\x00
     Select objects to measure:\xff\xfeC\x00e\x00l\x00l\x00s\x00
     Object to use as center?:\xff\xfeT\x00h\x00e\x00s\x00e\x00 \x00o\x00b\x00j\x00e\x00c\x00t\x00s\x00
     Select objects to use as centers:\xff\xfeN\x00o\x00n\x00e\x00
