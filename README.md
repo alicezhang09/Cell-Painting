@@ -3,16 +3,16 @@ This image analysis pipeline was developed to differentiate heart cells during t
 
 ## More about each file:
 ### Analysis w mask.cpipe: 
-CellProfiler pipeline with module added to remove midlayer of cells<br>
+CellProfiler pipeline with module added to remove midlayer of cells
 ### Analysis.cpipe: 
-CellProfiler pipeline for general feature extraction<br>
+CellProfiler pipeline for general feature extraction
 ### AnalysisQC.cpipe: 
-CellProfiler pipeline for extracting quality control features at image level<br>
+CellProfiler pipeline for extracting quality control features at image level
 ### Illumniation.cpipe: 
-Calculates and exports illumination correction function<br>
+Calculates and exports illumination correction function
 ### Python_Analysis.ipynb: 
-PCA and other data analysis <br>
+PCA and other data analysis 
 ### R Analysis.R: 
-Data analysis<br>
+Data analysis
 ### R Analysis.ipynb: 
-same as R but converted to notebook format for better readability <br>
+same as R but converted to notebook format for better readability 
